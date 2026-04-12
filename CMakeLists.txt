@@ -9,7 +9,7 @@ find_package(fmt REQUIRED)
 
 add_executable(
   petcare
-  petcare.cpp
+  src/petcare.cpp
 )
 
 target_link_libraries(
