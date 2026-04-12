@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 26)
 
 find_package(SFML COMPONENTS window graphics system)
 find_package(fmt REQUIRED)
+find_package(Boost COMPONENTS program_options REQUIRED)
 
 add_executable(
   petcare
@@ -14,6 +15,7 @@ add_executable(
 
 target_link_libraries(
   petcare
+  Boost::program_options
   fmt::fmt
   sfml-window
   sfml-graphics
