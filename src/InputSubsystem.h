@@ -1,0 +1,28 @@
+#pragma once
+
+#include <SFML/Graphics.hpp>
+
+#include "Signal.h"
+
+class InputSubsystem
+{
+public:
+  InputSubsystem();
+
+  void run(sf::RenderWindow& window);
+
+  Signal<>& onAccept();
+  Signal<>& onCancel();
+  Signal<>& onLeft();
+  Signal<>& onRight();
+  Signal<>& onQuit();
+
+private:
+  Signal<> _accept;
+  Signal<> _cancel;
+  Signal<> _left;
+  Signal<> _right;
+  Signal<> _quit;
+
+  const std::map<sf::Keyboard::Key, Signal<>*> _eventMap;
+};

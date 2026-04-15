@@ -9,6 +9,8 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
+#include "InputSubsystem.h"
+
 namespace po = boost::program_options;
 
 class Button
@@ -83,6 +85,8 @@ int main(int argc, char** argv)
       mode = sf::Style::Default;
     }
 
+    InputSubsystem inputSubsystem;
+
     std::map<std::filesystem::path, std::filesystem::path> data =
       {
         {"resources/bird.png", "resources/bird_stuff.png"},
@@ -105,16 +109,15 @@ int main(int argc, char** argv)
       buttons.back()->place(window, 1.0f * buttons.size() / (data.size() + 1), 0.5, 1.0f / (data.size() + 2));
     }
 
+    inputSubsystem.onQuit().connect([&]() { window.close(); });
+    inputSubsystem.onCancel().connect([&]() { window.close(); });
+    inputSubsystem.onLeft().connect([&]() { fmt::print("Left\n"); });
+    inputSubsystem.onRight().connect([&]() { fmt::print("Right\n"); });
+
     while (window.isOpen())
     {
-      sf::Event event;
-      while (window.pollEvent(event))
-      {
-        if(event.type == sf::Event::Closed)
-        {
-          window.close();
-        }
-      }
+      inputSubsystem.run(window);
+
       window.clear();
 
       button.draw(window);
