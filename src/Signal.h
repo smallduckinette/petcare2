@@ -8,7 +8,7 @@ template<typename... ARGS>
 class Signal
 {
 public:
-  void emit(ARGS&& ...args)
+  void emit(ARGS... args)
   {
     if (!_fire)
     {
@@ -25,7 +25,7 @@ public:
     _fire = false;
   }
 
-  void connect(std::function<void(ARGS&& ...)> f)
+  void connect(std::function<void(ARGS...)> f)
   {
     _callbacks.push_back(f);
   }
@@ -33,10 +33,10 @@ public:
   template<typename C, typename F>
   void connect(C * obj, F f)
   {
-    _callbacks.push_back([obj, f](ARGS&& ...args){ (obj->*f)(args...); });
+    _callbacks.push_back([obj, f](ARGS&... args){ (obj->*f)(args...); });
   }
 
 private:
-  std::vector<std::function<void(ARGS&& ...)> > _callbacks;
+  std::vector<std::function<void(ARGS...)> > _callbacks;
   bool _fire = false;
 };

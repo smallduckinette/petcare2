@@ -9,6 +9,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
+#include "GraphicsSubsystem.h"
 #include "InputSubsystem.h"
 
 namespace po = boost::program_options;
@@ -86,6 +87,7 @@ int main(int argc, char** argv)
     }
 
     InputSubsystem inputSubsystem;
+    GraphicsSubsystem graphicsSubsystem;
 
     std::map<std::filesystem::path, std::filesystem::path> data =
       {

@@ -10,6 +10,7 @@ find_package(Boost COMPONENTS program_options REQUIRED)
 
 add_executable(
   petcare
+  src/GraphicsSubsystem.cpp
   src/InputSubsystem.cpp
   src/petcare.cpp
 )
