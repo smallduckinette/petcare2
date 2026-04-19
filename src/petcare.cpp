@@ -9,6 +9,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
+#include "Config.h"
 #include "GraphicsSubsystem.h"
 #include "InputSubsystem.h"
 
@@ -67,6 +68,8 @@ int main(int argc, char** argv)
   {
     fmt::print("Starting Petcare\n");
 
+    auto conf = config::makeConfig();
+
     sf::VideoMode chosenMode;
     uint32_t mode = 0;
 
@@ -86,9 +89,6 @@ int main(int argc, char** argv)
       mode = sf::Style::Default;
     }
 
-    InputSubsystem inputSubsystem;
-    GraphicsSubsystem graphicsSubsystem;
-
     std::map<std::filesystem::path, std::filesystem::path> data =
       {
         {"resources/bird.png", "resources/bird_stuff.png"},
@@ -101,15 +101,20 @@ int main(int argc, char** argv)
     sf::RenderWindow window(chosenMode, "Petcare", mode);
     window.setVerticalSyncEnabled(true);
 
-    Button button("resources/duck.png");
-    button.place(window, 0.5, 0.075, 0.25);
+    GraphicsSubsystem graphicsSubsystem(&window);
+    InputSubsystem inputSubsystem(&window);
 
-    std::vector<std::unique_ptr<Button>> buttons;
-    for (const auto& [key, value] : data)
-    {
-      buttons.push_back(std::make_unique<Button>(value));
-      buttons.back()->place(window, 1.0f * buttons.size() / (data.size() + 1), 0.5, 1.0f / (data.size() + 2));
-    }
+    graphicsSubsystem.load(conf);
+
+    //Button button("resources/duck.png");
+    //button.place(window, 0.5, 0.075, 0.25);
+    //
+    //std::vector<std::unique_ptr<Button>> buttons;
+    //for (const auto& [key, value] : data)
+    //{
+    //  buttons.push_back(std::make_unique<Button>(value));
+    //  buttons.back()->place(window, 1.0f * buttons.size() / (data.size() + 1), 0.5, 1.0f / (data.size() + 2));
+    //}
 
     inputSubsystem.onQuit().connect([&]() { window.close(); });
     inputSubsystem.onCancel().connect([&]() { window.close(); });
@@ -118,15 +123,16 @@ int main(int argc, char** argv)
 
     while (window.isOpen())
     {
-      inputSubsystem.run(window);
+      inputSubsystem.run();
+      graphicsSubsystem.run();
 
       window.clear();
 
-      button.draw(window);
-      for(auto& button : buttons)
-      {
-        button->draw(window);
-      }
+      //button.draw(window);
+      //for(auto& button : buttons)
+      //{
+      //  button->draw(window);
+      //}
 
       window.display();
     }

@@ -8,22 +8,23 @@
 #include <SFML/Graphics.hpp>
 
 #include "Constants.h"
+#include "Config.h"
 
-class Displayable;
+class Visual;
 
 class GraphicsSubsystem
 {
 public:
-  GraphicsSubsystem();
+  GraphicsSubsystem(sf::RenderWindow* window);
+  ~GraphicsSubsystem();
 
-  void run(sf::RenderWindow& window) const;
+  void load(config::Config& conf);
 
-  void registerDisplayable(Displayable* displayable);
-  void deregisterDisplayable(Displayable* displayable);
+  void run() const;
 
 private:
-  std::map<TextureID, std::unique_ptr<sf::Texture>> loadTextures() const;
+  sf::RenderWindow* _window;
 
-  const std::map<TextureID, std::unique_ptr<sf::Texture>> _textures;
-  std::set<Displayable*> _displayables;
+  std::map<TextureID, std::unique_ptr<sf::Texture>> _textures;
+  std::map<EntityID, std::unique_ptr<Visual>> _visuals;
 };

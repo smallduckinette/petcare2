@@ -1,21 +1,22 @@
 #include "InputSubsystem.h"
 
 
-InputSubsystem::InputSubsystem():
+InputSubsystem::InputSubsystem(sf::RenderWindow* window):
   _eventMap(
     {
       {sf::Keyboard::Key::Enter, &_accept},
       {sf::Keyboard::Key::Escape, &_cancel},
       {sf::Keyboard::Key::Left, &_left},
       {sf::Keyboard::Key::Right, &_right}
-    })
+    }),
+  _window(window)
 {
 }
 
-void InputSubsystem::run(sf::RenderWindow& window)
+void InputSubsystem::run()
 {
   sf::Event event;
-  while (window.pollEvent(event))
+  while (_window->pollEvent(event))
   {
     if(event.type == sf::Event::Closed)
     {

@@ -3,42 +3,34 @@
 #include <ranges>
 #include <filesystem>
 
-#include "Displayable.h"
+#include "Visual.h"
 
-GraphicsSubsystem::GraphicsSubsystem():
-  _textures(loadTextures())
+GraphicsSubsystem::GraphicsSubsystem(sf::RenderWindow* window):
+  _window(window)
 {
 }
 
-void GraphicsSubsystem::run(sf::RenderWindow& window) const
+GraphicsSubsystem::~GraphicsSubsystem() = default;
+
+void GraphicsSubsystem::run() const
 {
-  std::ranges::for_each(_displayables, [&](const auto& displayable) { displayable->draw(window); });
+  std::ranges::for_each(_visuals, [&](const auto& visual) { visual.second->draw(_window); });
 }
 
-void GraphicsSubsystem::registerDisplayable(Displayable* displayable)
+void GraphicsSubsystem::load(config::Config& conf)
 {
-  _displayables.insert(displayable);
-}
+  _textures = conf._textures | std::views::transform([](const auto& item) { auto [key, value] = item; auto texture = std::make_unique<sf::Texture>(); texture->loadFromFile(value); return std::make_pair(key, std::move(texture)); }) | std::ranges::to<std::map>();
 
-void GraphicsSubsystem::deregisterDisplayable(Displayable* displayable)
-{
-  _displayables.erase(displayable);
-}
-
-std::map<TextureID, std::unique_ptr<sf::Texture>> GraphicsSubsystem::loadTextures() const
-{
-  std::map<TextureID, std::filesystem::path> texturesConfig = {
-    {tex::BIRD, "resources/bird.png"},
-    {tex::BIRD_STUFF, "resources/bird_stuff.png"},
-    {tex::CAT, "resources/cat.png"},
-    {tex::CAT_STUFF, "resources/cat_stuff.png"},
-    {tex::DOG, "resources/dog.png"},
-    {tex::DOG_STUFF, "resources/dog_stuff.png"},
-    {tex::DUCK, "resources/duck.png"},
-    {tex::DUCK_STUFF, "resources/duck_stuff.png"},
-    {tex::TURTLE, "resources/turtle.png"},
-    {tex::TURTLE_STUFF, "resources/turtle_stuff.png"}
-  };
-
-  return texturesConfig | std::views::transform([](const auto& item) -> std::pair<TextureID, std::unique_ptr<sf::Texture>> { auto [key, value] = item; auto texture = std::make_unique<sf::Texture>(); texture->loadFromFile(value); return std::make_pair(key, std::move(texture));}) | std::ranges::to<std::map>();
+  const size_t accessoryCount = conf._accessories.size();
+  for (const auto& [index, entity] : std::views::enumerate(conf._accessories))
+  {
+    auto it = _textures.find(entity._textureID);
+    if (it == _textures.end())
+    {
+      throw std::runtime_error("Cannot find texture");
+    }
+    auto visual = std::make_unique<Visual>(it->second.get());
+    visual->place(_window, 1.0f * (index + 1) / (accessoryCount + 1), 0.5, 1.0f / (accessoryCount + 2));
+    _visuals.emplace(entity._entityID, std::move(visual));
+  }
 }

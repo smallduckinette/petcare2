@@ -7,9 +7,9 @@
 class InputSubsystem
 {
 public:
-  InputSubsystem();
+  InputSubsystem(sf::RenderWindow* window);
 
-  void run(sf::RenderWindow& window);
+  void run();
 
   Signal<>& onAccept();
   Signal<>& onCancel();
@@ -25,4 +25,5 @@ private:
   Signal<> _quit;
 
   const std::map<sf::Keyboard::Key, Signal<>*> _eventMap;
+  sf::RenderWindow* _window;
 };
