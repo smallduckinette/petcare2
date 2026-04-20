@@ -15,35 +15,6 @@
 
 namespace po = boost::program_options;
 
-class Button
-{
-public:
-  Button(const std::filesystem::path& file)
-  {
-    _texture.loadFromFile(file);
-    _sprite.setTexture(_texture);
-  }
-
-  void place(sf::RenderWindow& window, float centerXpc, float topYpc, float scale)
-  {
-    float width = window.getSize().x * scale;
-    float x = window.getSize().x * centerXpc - width / 2;
-    float y = window.getSize().y * topYpc;
-    float spriteScale = scale * window.getSize().x / _texture.getSize().x;
-
-    _sprite.setPosition(sf::Vector2f(x, y));
-    _sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
-  }
-
-  void draw(sf::RenderWindow& window)
-  {
-    window.draw(_sprite);
-  }
-
-private:
-  sf::Texture _texture;
-  sf::Sprite _sprite;
-};
 
 int main(int argc, char** argv)
 {
@@ -89,15 +60,6 @@ int main(int argc, char** argv)
       mode = sf::Style::Default;
     }
 
-    std::map<std::filesystem::path, std::filesystem::path> data =
-      {
-        {"resources/bird.png", "resources/bird_stuff.png"},
-        {"resources/cat.png", "resources/cat_stuff.png"},
-        {"resources/dog.png", "resources/dog_stuff.png"},
-        {"resources/duck.png", "resources/duck_stuff.png"},
-        {"resources/turtle.png", "resources/turtle_stuff.png"}
-      };
-
     sf::RenderWindow window(chosenMode, "Petcare", mode);
     window.setVerticalSyncEnabled(true);
 
@@ -105,16 +67,6 @@ int main(int argc, char** argv)
     InputSubsystem inputSubsystem(&window);
 
     graphicsSubsystem.load(conf);
-
-    //Button button("resources/duck.png");
-    //button.place(window, 0.5, 0.075, 0.25);
-    //
-    //std::vector<std::unique_ptr<Button>> buttons;
-    //for (const auto& [key, value] : data)
-    //{
-    //  buttons.push_back(std::make_unique<Button>(value));
-    //  buttons.back()->place(window, 1.0f * buttons.size() / (data.size() + 1), 0.5, 1.0f / (data.size() + 2));
-    //}
 
     inputSubsystem.onQuit().connect([&]() { window.close(); });
     inputSubsystem.onCancel().connect([&]() { window.close(); });
@@ -124,15 +76,10 @@ int main(int argc, char** argv)
     while (window.isOpen())
     {
       inputSubsystem.run();
-      graphicsSubsystem.run();
 
       window.clear();
 
-      //button.draw(window);
-      //for(auto& button : buttons)
-      //{
-      //  button->draw(window);
-      //}
+      graphicsSubsystem.run();
 
       window.display();
     }
