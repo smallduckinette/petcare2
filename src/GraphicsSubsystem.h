@@ -22,6 +22,8 @@ public:
 
   void run() const;
 
+  void setStyle(EntityID entity, const StyleID& style);
+
 private:
   sf::Texture* getTexture(TextureID textureID) const;
 

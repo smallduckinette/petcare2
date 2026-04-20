@@ -17,6 +17,15 @@ void GraphicsSubsystem::run() const
   std::ranges::for_each(_visuals, [&](const auto& visual) { visual.second->draw(_window); });
 }
 
+void GraphicsSubsystem::setStyle(EntityID entity, const StyleID& style)
+{
+  auto it = _visuals.find(entity);
+  if (it != _visuals.end())
+  {
+    it->second->setStyle(style);
+  }
+}
+
 void GraphicsSubsystem::load(config::Config& conf)
 {
   _textures = conf._textures | std::views::transform([](const auto& item) { auto [key, value] = item; auto texture = std::make_unique<sf::Texture>(); texture->loadFromFile(value); return std::make_pair(key, std::move(texture)); }) | std::ranges::to<std::map>();

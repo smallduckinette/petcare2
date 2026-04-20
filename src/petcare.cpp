@@ -10,6 +10,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Config.h"
+#include "GameplaySubsystem.h"
 #include "GraphicsSubsystem.h"
 #include "InputSubsystem.h"
 
@@ -65,13 +66,18 @@ int main(int argc, char** argv)
 
     GraphicsSubsystem graphicsSubsystem(&window);
     InputSubsystem inputSubsystem(&window);
+    GameplaySubsystem gameplaySubsystem;
 
     graphicsSubsystem.load(conf);
+    gameplaySubsystem.load(conf);
 
     inputSubsystem.onQuit().connect([&]() { window.close(); });
     inputSubsystem.onCancel().connect([&]() { window.close(); });
-    inputSubsystem.onLeft().connect([&]() { fmt::print("Left\n"); });
-    inputSubsystem.onRight().connect([&]() { fmt::print("Right\n"); });
+    inputSubsystem.onLeft().connect([&]() { gameplaySubsystem.previous(); });
+    inputSubsystem.onRight().connect([&]() { gameplaySubsystem.next(); });
+
+    gameplaySubsystem.onSelect().connect([&](EntityID entityID) { graphicsSubsystem.setStyle(entityID, selectedStyle); });
+    gameplaySubsystem.onDeselect().connect([&](EntityID entityID) { graphicsSubsystem.setStyle(entityID, normalStyle); });
 
     while (window.isOpen())
     {
