@@ -23,6 +23,8 @@ public:
   void run() const;
 
 private:
+  sf::Texture* getTexture(TextureID textureID) const;
+
   sf::RenderWindow* _window;
 
   std::map<TextureID, std::unique_ptr<sf::Texture>> _textures;

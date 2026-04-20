@@ -24,13 +24,24 @@ void GraphicsSubsystem::load(config::Config& conf)
   const size_t accessoryCount = conf._accessories.size();
   for (const auto& [index, entity] : std::views::enumerate(conf._accessories))
   {
-    auto it = _textures.find(entity._textureID);
-    if (it == _textures.end())
-    {
-      throw std::runtime_error("Cannot find texture");
-    }
-    auto visual = std::make_unique<Visual>(it->second.get());
+    auto styles = entity._styles | std::views::transform([&](const auto& item) { return std::make_pair(item.first, getTexture(item.second));}) | std::ranges::to<std::map>();
+
+    auto visual = std::make_unique<Visual>(getTexture(entity._textureID), styles);
     visual->place(_window, 1.0f * (index + 1) / (accessoryCount + 1), 0.5, 1.0f / (accessoryCount + 2));
+    visual->setStyle(normalStyle);
     _visuals.emplace(entity._entityID, std::move(visual));
+  }
+}
+
+sf::Texture* GraphicsSubsystem::getTexture(TextureID textureID) const
+{
+  auto it = _textures.find(textureID);
+  if (it == _textures.end())
+  {
+    throw std::runtime_error("Cannot find texture");
+  }
+  else
+  {
+    return it->second.get();
   }
 }

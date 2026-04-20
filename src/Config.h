@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <vector>
+#include <map>
 
 #include "Constants.h"
 
@@ -17,6 +18,7 @@ namespace config
   {
     EntityID _entityID;
     TextureID _textureID;
+    std::map<StyleID, TextureID> _styles;
   };
 
   struct Config
