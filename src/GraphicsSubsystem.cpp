@@ -52,7 +52,7 @@ void GraphicsSubsystem::load(config::Config& conf)
   for (const auto& entity : conf._animals)
   {
     auto visual = makeVisual(entity);
-    visual->place(_window, 0.5, 0.1, 0.3);
+    visual->place(_window, 0.5, 0.05, 0.3);
     visual->setVisibility(false);
     visual->setStyle(normalStyle);
   }
