@@ -8,18 +8,27 @@ template<typename... ARGS>
 class Signal
 {
 public:
-  void emit(ARGS... args)
+  // Debounced version of fire - Will fire once, and won't
+  // fire again until debounced
+  void emit(ARGS&&... args)
   {
     if (!_fire)
     {
       _fire = true;
-      for(auto && callback : _callbacks)
-      {
-        callback(args...);
-      }
+      fire(std::forward<ARGS>(args)...);
     }
   }
 
+  // Fire the event
+  void fire(ARGS... args)
+  {
+    for(auto && callback : _callbacks)
+    {
+      callback(args...);
+    }
+  }
+
+  // Allow the event to be emitted again
   void reset()
   {
     _fire = false;

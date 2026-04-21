@@ -23,9 +23,11 @@ public:
   void run() const;
 
   void setStyle(EntityID entity, const StyleID& style);
+  void setVisibility(EntityID entity, bool visible);
 
 private:
   sf::Texture* getTexture(TextureID textureID) const;
+  Visual* makeVisual(const config::Entity& entity);
 
   sf::RenderWindow* _window;
 

@@ -3,7 +3,9 @@
 #include <fmt/core.h>
 
 Visual::Visual(sf::Texture* texture, const std::map<StyleID, sf::Texture*>& styles):
-  _texture(texture)
+  _texture(texture),
+  _currentStyle(nullptr),
+  _visibility(true)
 {
   _sprite.setTexture(*texture);
 
@@ -15,10 +17,13 @@ Visual::Visual(sf::Texture* texture, const std::map<StyleID, sf::Texture*>& styl
 
 void Visual::draw(sf::RenderWindow* window)
 {
-  window->draw(_sprite);
-  if (_currentStyle)
+  if (_visibility)
   {
-    window->draw(*_currentStyle);
+    window->draw(_sprite);
+    if (_currentStyle)
+    {
+      window->draw(*_currentStyle);
+    }
   }
 }
 
@@ -26,6 +31,11 @@ void Visual::setStyle(const StyleID& style)
 {
   auto it = _styles.find(style);
   _currentStyle = (it != _styles.end()) ? &it->second.second : nullptr;
+}
+
+void Visual::setVisibility(bool visibility)
+{
+  _visibility = visibility;
 }
 
 void Visual::place(sf::RenderWindow* window, float centerXpc, float topYpc, float scale)

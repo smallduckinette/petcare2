@@ -26,19 +26,35 @@ void GraphicsSubsystem::setStyle(EntityID entity, const StyleID& style)
   }
 }
 
+void GraphicsSubsystem::setVisibility(EntityID entity, bool visible)
+{
+  auto it = _visuals.find(entity);
+  if (it != _visuals.end())
+  {
+    it->second->setVisibility(visible);
+  }
+}
+
 void GraphicsSubsystem::load(config::Config& conf)
 {
   _textures = conf._textures | std::views::transform([](const auto& item) { auto [key, value] = item; auto texture = std::make_unique<sf::Texture>(); texture->loadFromFile(value); return std::make_pair(key, std::move(texture)); }) | std::ranges::to<std::map>();
 
+  // Accessories
   const size_t accessoryCount = conf._accessories.size();
   for (const auto& [index, entity] : std::views::enumerate(conf._accessories))
   {
-    auto styles = entity._styles | std::views::transform([&](const auto& item) { return std::make_pair(item.first, getTexture(item.second));}) | std::ranges::to<std::map>();
-
-    auto visual = std::make_unique<Visual>(getTexture(entity._textureID), styles);
-    visual->place(_window, 1.0f * (index + 1) / (accessoryCount + 1), 0.5, 1.0f / (accessoryCount + 2));
+    auto visual = makeVisual(entity);
+    visual->place(_window, 1.0f * (index + 1) / (accessoryCount + 1), 0.6, 1.0f / (accessoryCount + 2));
     visual->setStyle(normalStyle);
-    _visuals.emplace(entity._entityID, std::move(visual));
+  }
+
+  // Animals
+  for (const auto& entity : conf._animals)
+  {
+    auto visual = makeVisual(entity);
+    visual->place(_window, 0.5, 0.1, 0.3);
+    visual->setVisibility(false);
+    visual->setStyle(normalStyle);
   }
 }
 
@@ -53,4 +69,11 @@ sf::Texture* GraphicsSubsystem::getTexture(TextureID textureID) const
   {
     return it->second.get();
   }
+}
+
+Visual* GraphicsSubsystem::makeVisual(const config::Entity& entity)
+{
+  auto styles = entity._styles | std::views::transform([&](const auto& item) { return std::make_pair(item.first, getTexture(item.second));}) | std::ranges::to<std::map>();
+  auto visual = std::make_unique<Visual>(getTexture(entity._textureID), styles);
+  return _visuals.emplace(entity._entityID, std::move(visual)).first->second.get();
 }

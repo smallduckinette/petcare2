@@ -24,6 +24,7 @@ namespace config
   struct Config
   {
     std::vector<Texture> _textures;
+    std::vector<Entity> _animals;
     std::vector<Entity> _accessories;
   };
 

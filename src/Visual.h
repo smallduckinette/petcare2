@@ -17,6 +17,7 @@ public:
   void place(sf::RenderWindow* window, float centerXpc, float topYpc, float scale);
 
   void setStyle(const StyleID& style);
+  void setVisibility(bool visibility);
 
 private:
   void placeSprite(sf::RenderWindow* window, float centerXpc, float topYpc, float scale, sf::Texture* texture, sf::Sprite& sprite) const;
@@ -26,4 +27,6 @@ private:
 
   std::map<StyleID, std::pair<sf::Texture*, sf::Sprite>> _styles;
   sf::Sprite* _currentStyle;
+
+  bool _visibility;
 };

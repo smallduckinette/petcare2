@@ -75,9 +75,14 @@ int main(int argc, char** argv)
     inputSubsystem.onCancel().connect([&]() { window.close(); });
     inputSubsystem.onLeft().connect([&]() { gameplaySubsystem.previous(); });
     inputSubsystem.onRight().connect([&]() { gameplaySubsystem.next(); });
+    inputSubsystem.onAccept().connect([&]() { gameplaySubsystem.select(); });
 
     gameplaySubsystem.onSelect().connect([&](EntityID entityID) { graphicsSubsystem.setStyle(entityID, selectedStyle); });
     gameplaySubsystem.onDeselect().connect([&](EntityID entityID) { graphicsSubsystem.setStyle(entityID, normalStyle); });
+    gameplaySubsystem.onShow().connect([&](EntityID entityID) { graphicsSubsystem.setVisibility(entityID, true); });
+    gameplaySubsystem.onHide().connect([&](EntityID entityID) { graphicsSubsystem.setVisibility(entityID, false); });
+
+    gameplaySubsystem.startGame();
 
     while (window.isOpen())
     {
