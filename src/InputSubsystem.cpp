@@ -1,5 +1,6 @@
 #include "InputSubsystem.h"
 
+#include <fmt/core.h>
 
 InputSubsystem::InputSubsystem(sf::RenderWindow* window):
   _eventMap(
@@ -8,6 +9,11 @@ InputSubsystem::InputSubsystem(sf::RenderWindow* window):
       {sf::Keyboard::Key::Escape, &_cancel},
       {sf::Keyboard::Key::Left, &_left},
       {sf::Keyboard::Key::Right, &_right}
+    }),
+  _joyMap(
+    {
+      {0, &_accept},
+      {1, &_cancel}
     }),
   _window(window)
 {
@@ -22,7 +28,7 @@ void InputSubsystem::run()
     {
       _quit.emit();
     }
-    else if (event.type == sf::Event::KeyPressed || sf::Event::KeyReleased)
+    else if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased)
     {
       auto it = _eventMap.find(event.key.code);
       if (it != _eventMap.end())
@@ -35,6 +41,40 @@ void InputSubsystem::run()
         {
           it->second->reset();
         }
+      }
+    }
+    else if (event.type == sf::Event::JoystickButtonPressed || event.type == sf::Event::JoystickButtonReleased)
+    {
+      auto it = _joyMap.find(event.joystickButton.button);
+      if (it != _joyMap.end())
+      {
+        if (event.type == sf::Event::JoystickButtonPressed)
+        {
+          it->second->emit();
+        }
+        else
+        {
+          it->second->reset();
+        }
+      }
+    }
+    else if (event.type == sf::Event::JoystickMoved && event.joystickMove.axis == 0)
+    {
+      if (event.joystickMove.position > 90)
+      {
+        _right.emit();
+      }
+      else if (event.joystickMove.position < 20)
+      {
+        _right.reset();
+      }
+      if (event.joystickMove.position < -90)
+      {
+        _left.emit();
+      }
+      else if (event.joystickMove.position > -20)
+      {
+        _left.reset();
       }
     }
   }

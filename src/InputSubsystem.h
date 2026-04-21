@@ -25,5 +25,6 @@ private:
   Signal<> _quit;
 
   const std::map<sf::Keyboard::Key, Signal<>*> _eventMap;
+  const std::map<unsigned int, Signal<>*> _joyMap;
   sf::RenderWindow* _window;
 };
