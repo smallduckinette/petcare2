@@ -14,6 +14,7 @@
 #include "GraphicsSubsystem.h"
 #include "InputSubsystem.h"
 #include "SoundSubsystem.h"
+#include "MusicSubsystem.h"
 
 namespace po = boost::program_options;
 
@@ -69,10 +70,12 @@ int main(int argc, char** argv)
     InputSubsystem inputSubsystem(&window);
     GameplaySubsystem gameplaySubsystem;
     SoundSubsystem soundSubsystem;
+    MusicSubsystem musicSubsystem;
 
     graphicsSubsystem.load(conf);
     gameplaySubsystem.load(conf);
     soundSubsystem.load(conf);
+    musicSubsystem.load(conf);
 
     inputSubsystem.onQuit().connect([&]() { window.close(); });
     inputSubsystem.onCancel().connect([&]() { window.close(); });
@@ -92,6 +95,7 @@ int main(int argc, char** argv)
     while (window.isOpen())
     {
       inputSubsystem.run();
+      musicSubsystem.run();
 
       window.clear();
 

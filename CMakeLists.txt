@@ -14,6 +14,7 @@ add_executable(
   src/GameplaySubsystem.cpp
   src/GraphicsSubsystem.cpp
   src/InputSubsystem.cpp
+  src/MusicSubsystem.cpp
   src/SoundSubsystem.cpp
   src/Visual.cpp
   src/petcare.cpp

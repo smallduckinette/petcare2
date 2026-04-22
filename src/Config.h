@@ -20,6 +20,11 @@ namespace config
     std::filesystem::path _filename;
   };
 
+  struct Music
+  {
+    std::filesystem::path _filename;
+  };
+
   struct Entity
   {
     EntityID _entityID;
@@ -33,6 +38,7 @@ namespace config
     std::vector<Entity> _animals;
     std::vector<Entity> _accessories;
     std::vector<Sound> _sounds;
+    std::vector<Music> _playlist;
   };
 
   Config makeConfig();

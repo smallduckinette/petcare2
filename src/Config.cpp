@@ -69,6 +69,12 @@ config::Config config::makeConfig()
                   Sound{dogStuffEntity, "resources/mi.wav"},
                   Sound{duckStuffEntity, "resources/fa.wav"},
                   Sound{turtleStuffEntity, "resources/sol.wav"}
+                },
+                {
+                  Music{"resources/bach.mp3"},
+                  Music{"resources/bossa.mp3"},
+                  Music{"resources/clavecin.mp3"},
+                  Music{"resources/vibraphone.mp3"}
                 }
   };
 }
