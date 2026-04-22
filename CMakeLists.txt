@@ -4,7 +4,7 @@ project(petcare)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 26)
 
-find_package(SFML COMPONENTS window graphics system)
+find_package(SFML COMPONENTS window graphics system audio)
 find_package(fmt REQUIRED)
 find_package(Boost COMPONENTS program_options REQUIRED)
 
@@ -14,6 +14,7 @@ add_executable(
   src/GameplaySubsystem.cpp
   src/GraphicsSubsystem.cpp
   src/InputSubsystem.cpp
+  src/SoundSubsystem.cpp
   src/Visual.cpp
   src/petcare.cpp
 )
@@ -24,4 +25,5 @@ target_link_libraries(
   fmt::fmt
   sfml-window
   sfml-graphics
-  sfml-system)
+  sfml-system
+  sfml-audio)

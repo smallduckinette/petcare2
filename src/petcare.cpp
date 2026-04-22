@@ -13,6 +13,7 @@
 #include "GameplaySubsystem.h"
 #include "GraphicsSubsystem.h"
 #include "InputSubsystem.h"
+#include "SoundSubsystem.h"
 
 namespace po = boost::program_options;
 
@@ -67,9 +68,11 @@ int main(int argc, char** argv)
     GraphicsSubsystem graphicsSubsystem(&window);
     InputSubsystem inputSubsystem(&window);
     GameplaySubsystem gameplaySubsystem;
+    SoundSubsystem soundSubsystem;
 
     graphicsSubsystem.load(conf);
     gameplaySubsystem.load(conf);
+    soundSubsystem.load(conf);
 
     inputSubsystem.onQuit().connect([&]() { window.close(); });
     inputSubsystem.onCancel().connect([&]() { window.close(); });
@@ -81,6 +84,8 @@ int main(int argc, char** argv)
     gameplaySubsystem.onDeselect().connect([&](EntityID entityID) { graphicsSubsystem.setStyle(entityID, normalStyle); });
     gameplaySubsystem.onShow().connect([&](EntityID entityID) { graphicsSubsystem.setVisibility(entityID, true); });
     gameplaySubsystem.onHide().connect([&](EntityID entityID) { graphicsSubsystem.setVisibility(entityID, false); });
+
+    gameplaySubsystem.onSelect().connect([&](EntityID entityID) { soundSubsystem.play(entityID); });
 
     gameplaySubsystem.startGame();
 

@@ -62,5 +62,13 @@ config::Config config::makeConfig()
                   Entity{dogStuffEntity, dogStuffTexture, styles},
                   Entity{duckStuffEntity, duckStuffTexture, styles},
                   Entity{turtleStuffEntity, turtleStuffTexture, styles}
-                }};
+                },
+                {
+                  Sound{birdStuffEntity, "resources/do.wav"},
+                  Sound{catStuffEntity, "resources/re.wav"},
+                  Sound{dogStuffEntity, "resources/mi.wav"},
+                  Sound{duckStuffEntity, "resources/fa.wav"},
+                  Sound{turtleStuffEntity, "resources/sol.wav"}
+                }
+  };
 }
