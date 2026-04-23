@@ -73,7 +73,5 @@ sf::Texture* GraphicsSubsystem::getTexture(TextureID textureID) const
 
 Visual* GraphicsSubsystem::makeVisual(const config::Entity& entity)
 {
-  auto styles = entity._styles | std::views::transform([&](const auto& item) { return std::make_pair(item.first, getTexture(item.second));}) | std::ranges::to<std::map>();
-  auto visual = std::make_unique<Visual>(getTexture(entity._textureID), styles);
-  return _visuals.emplace(entity._entityID, std::move(visual)).first->second.get();
+  return _visuals.emplace(entity._entityID, std::make_unique<Visual>(entity, [&](TextureID textureID) { return getTexture(textureID); })).first->second.get();
 }

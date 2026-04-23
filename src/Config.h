@@ -25,11 +25,24 @@ namespace config
     std::filesystem::path _filename;
   };
 
+  struct Bouncy
+  {
+    double _period;
+    double _amplitude;
+  };
+
+  using Animation = std::variant<std::monostate, Bouncy>;
+
+  struct Element
+  {
+    TextureID _textureID;
+    Animation _animation;
+  };
+
   struct Entity
   {
     EntityID _entityID;
-    TextureID _textureID;
-    std::map<StyleID, TextureID> _styles;
+    std::map<StyleID, std::vector<Element>> _styles;
   };
 
   struct Config

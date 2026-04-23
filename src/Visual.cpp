@@ -1,17 +1,25 @@
 #include "Visual.h"
 
+#include <ranges>
+
 #include <fmt/core.h>
 
-Visual::Visual(sf::Texture* texture, const std::map<StyleID, sf::Texture*>& styles):
-  _texture(texture),
-  _currentStyle(nullptr),
-  _visibility(true)
+Visual::Visual(const config::Entity& entity, std::function<sf::Texture*(TextureID textureID)> getTexture):
+  _visibility(true),
+  _currentStyle(_styles.end())
 {
-  _sprite.setTexture(*texture);
-
-  for (const auto& [style, texture] : styles)
+  for (const auto& [style, elementsConfig] : entity._styles)
   {
-    _styles.emplace(style, std::make_pair(texture, sf::Sprite())).first->second.second.setTexture(*texture);
+    std::vector<std::unique_ptr<Element>> elements;
+    for (const auto& elementConfig : elementsConfig)
+    {
+      auto texture = getTexture(elementConfig._textureID);
+      if (texture)
+      {
+        elements.push_back(std::make_unique<Element>(texture, elementConfig._animation));
+      }
+    }
+    _styles.emplace(style, std::move(elements));
   }
 }
 
@@ -19,18 +27,19 @@ void Visual::draw(sf::RenderWindow* window)
 {
   if (_visibility)
   {
-    window->draw(_sprite);
-    if (_currentStyle)
+    if (_currentStyle != _styles.end())
     {
-      window->draw(*_currentStyle);
+      for (const auto& element : _currentStyle->second)
+      {
+        element->draw(window);
+      }
     }
   }
 }
 
 void Visual::setStyle(const StyleID& style)
 {
-  auto it = _styles.find(style);
-  _currentStyle = (it != _styles.end()) ? &it->second.second : nullptr;
+  _currentStyle = _styles.find(style);
 }
 
 void Visual::setVisibility(bool visibility)
@@ -40,17 +49,34 @@ void Visual::setVisibility(bool visibility)
 
 void Visual::place(sf::RenderWindow* window, float centerXpc, float topYpc, float scale)
 {
-  placeSprite(window, centerXpc, topYpc, scale, _texture, _sprite);
-  std::ranges::for_each(_styles, [&](auto& item) { placeSprite(window, centerXpc, topYpc, scale, item.second.first, item.second.second); });
+  std::ranges::for_each(_styles, [&](auto& style)
+  {
+    std::ranges::for_each(style.second, [&](auto& element)
+    {
+      element->place(window, centerXpc, topYpc, scale);
+    });
+  });
 }
 
-void Visual::placeSprite(sf::RenderWindow* window, float centerXpc, float topYpc, float scale, sf::Texture* texture, sf::Sprite& sprite) const
+Visual::Element::Element(sf::Texture* texture, config::Animation animation):
+  _texture(texture),
+  _animation(animation)
+{
+  _sprite.setTexture(*_texture);
+}
+
+void Visual::Element::draw(sf::RenderWindow* window)
+{
+  window->draw(_sprite);
+}
+
+void Visual::Element::place(sf::RenderWindow* window, float centerXpc, float topYpc, float scale)
 {
   float width = window->getSize().x * scale;
   float x = window->getSize().x * centerXpc - width / 2;
   float y = window->getSize().y * topYpc;
-  float spriteScale = scale * window->getSize().x / texture->getSize().x;
+  float spriteScale = scale * window->getSize().x / _texture->getSize().x;
 
-  sprite.setPosition(sf::Vector2f(x, y));
-  sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
+  _sprite.setPosition(sf::Vector2f(x, y));
+  _sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
 }

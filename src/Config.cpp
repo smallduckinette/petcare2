@@ -35,6 +35,17 @@ config::Config config::makeConfig()
   std::map<StyleID, TextureID> styles = {{normalStyle, frameTexture},
                                              {selectedStyle, frameSelTexture}};
 
+  auto makeAnimal = [&](EntityID entityID, TextureID textureID)
+  {
+    return Entity{entityID, {{normalStyle, {Element{textureID, Animation(std::monostate())}, Element{frameTexture, Animation(std::monostate())}}}}};
+  };
+
+  auto makeAccessory = [&](EntityID entityID, TextureID textureID)
+  {
+    return Entity{entityID, {{normalStyle, {Element{textureID, Animation(std::monostate())}, Element{frameTexture, Animation(std::monostate())}}},
+                             {selectedStyle, {Element{textureID, Animation(std::monostate())}, Element{frameSelTexture, Animation(Bouncy(1, 0.01))}}}}};
+  };
+
   return Config{{
       Texture{birdStuffTexture, "resources/bird_stuff.png"},
       Texture{catStuffTexture, "resources/cat_stuff.png"},
@@ -50,18 +61,18 @@ config::Config config::makeConfig()
       Texture{frameSelTexture, "resources/frame_sel.png"},
     },
                 {
-                  Entity{birdEntity, birdTexture, styles},
-                  Entity{catEntity, catTexture, styles},
-                  Entity{dogEntity, dogTexture, styles},
-                  Entity{duckEntity, duckTexture, styles},
-                  Entity{turtleEntity, turtleTexture, styles}
+                  makeAccessory(birdEntity, birdTexture),
+                  makeAccessory(catEntity, catTexture),
+                  makeAccessory(dogEntity, dogTexture),
+                  makeAccessory(duckEntity, duckTexture),
+                  makeAccessory(turtleEntity, turtleTexture)
                 },
                 {
-                  Entity{birdStuffEntity, birdStuffTexture, styles},
-                  Entity{catStuffEntity, catStuffTexture, styles},
-                  Entity{dogStuffEntity, dogStuffTexture, styles},
-                  Entity{duckStuffEntity, duckStuffTexture, styles},
-                  Entity{turtleStuffEntity, turtleStuffTexture, styles}
+                  makeAccessory(birdStuffEntity, birdStuffTexture),
+                  makeAccessory(catStuffEntity, catStuffTexture),
+                  makeAccessory(dogStuffEntity, dogStuffTexture),
+                  makeAccessory(duckStuffEntity, duckStuffTexture),
+                  makeAccessory(turtleStuffEntity, turtleStuffTexture)
                 },
                 {
                   Sound{birdStuffEntity, "resources/do.wav"},
