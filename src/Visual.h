@@ -30,24 +30,21 @@ private:
 
     void place(sf::RenderWindow* window, float centerXpc, float topYpc, float scale);
 
+    void onPrepareDisplay();
+
   private:
+    void animate(std::monostate);
+    void animate(double period);
+
     sf::Texture* _texture;
     sf::Sprite _sprite;
     config::Animation _animation;
+    sf::Clock _clock;
   };
-
-  void placeSprite(sf::RenderWindow* window, float centerXpc, float topYpc, float scale, sf::Texture* texture, sf::Sprite& sprite) const;
-
-    //sf::Texture* _texture;
-    //sf::Sprite _sprite;
-
-    //std::map<StyleID, std::pair::Texture*, sf::Sprite>> _styles;
-    //sf::Sprite* _currentStyle;
 
   using StylesT = std::map<StyleID, std::vector<std::unique_ptr<Element>>>;
   StylesT _styles;
   StylesT::iterator _currentStyle;
-
 
   bool _visibility;
 };

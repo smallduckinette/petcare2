@@ -43,7 +43,7 @@ config::Config config::makeConfig()
   auto makeAccessory = [&](EntityID entityID, TextureID textureID)
   {
     return Entity{entityID, {{normalStyle, {Element{textureID, Animation(std::monostate())}, Element{frameTexture, Animation(std::monostate())}}},
-                             {selectedStyle, {Element{textureID, Animation(std::monostate())}, Element{frameSelTexture, Animation(Bouncy(1, 0.01))}}}}};
+                             {selectedStyle, {Element{textureID, Animation(std::monostate())}, Element{frameSelTexture, Animation(0.2f)}}}}};
   };
 
   return Config{{

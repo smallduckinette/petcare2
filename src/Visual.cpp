@@ -1,6 +1,8 @@
 #include "Visual.h"
 
 #include <ranges>
+#include <variant>
+#include <cmath>
 
 #include <fmt/core.h>
 
@@ -40,6 +42,11 @@ void Visual::draw(sf::RenderWindow* window)
 void Visual::setStyle(const StyleID& style)
 {
   _currentStyle = _styles.find(style);
+
+  for (const auto& element : _currentStyle->second)
+  {
+    element->onPrepareDisplay();
+  }
 }
 
 void Visual::setVisibility(bool visibility)
@@ -67,6 +74,8 @@ Visual::Element::Element(sf::Texture* texture, config::Animation animation):
 
 void Visual::Element::draw(sf::RenderWindow* window)
 {
+  std::visit([&](const auto& val) { animate(val); }, _animation);
+
   window->draw(_sprite);
 }
 
@@ -79,4 +88,20 @@ void Visual::Element::place(sf::RenderWindow* window, float centerXpc, float top
 
   _sprite.setPosition(sf::Vector2f(x, y));
   _sprite.setScale(sf::Vector2f(spriteScale, spriteScale));
+}
+
+void Visual::Element::onPrepareDisplay()
+{
+  _clock.restart();
+}
+
+void Visual::Element::animate(std::monostate)
+{
+  // Noop
+}
+
+void Visual::Element::animate(double period)
+{
+  float color = std::cos(_clock.getElapsedTime().asSeconds() * std::numbers::pi / period) / 10 + 0.9;
+  _sprite.setColor(sf::Color(255, 255, 255, 255 * color));
 }

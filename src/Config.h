@@ -25,13 +25,7 @@ namespace config
     std::filesystem::path _filename;
   };
 
-  struct Bouncy
-  {
-    double _period;
-    double _amplitude;
-  };
-
-  using Animation = std::variant<std::monostate, Bouncy>;
+  using Animation = std::variant<std::monostate, float>;
 
   struct Element
   {
