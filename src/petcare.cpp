@@ -12,6 +12,7 @@
 #include "Config.h"
 #include "GameplaySubsystem.h"
 #include "GraphicsSubsystem.h"
+#include "HudSubsystem.h"
 #include "InputSubsystem.h"
 #include "SoundSubsystem.h"
 #include "MusicSubsystem.h"
@@ -71,6 +72,7 @@ int main(int argc, char** argv)
     GameplaySubsystem gameplaySubsystem;
     SoundSubsystem soundSubsystem;
     MusicSubsystem musicSubsystem;
+    HudSubsystem hudSubsystem(&window);
 
     graphicsSubsystem.load(conf);
     gameplaySubsystem.load(conf);
@@ -87,6 +89,8 @@ int main(int argc, char** argv)
     gameplaySubsystem.onDeselect().connect([&](EntityID entityID) { graphicsSubsystem.setStyle(entityID, normalStyle); });
     gameplaySubsystem.onShow().connect([&](EntityID entityID) { graphicsSubsystem.setVisibility(entityID, true); });
     gameplaySubsystem.onHide().connect([&](EntityID entityID) { graphicsSubsystem.setVisibility(entityID, false); });
+    gameplaySubsystem.onScore().connect([&]() { hudSubsystem.increaseScore(); });
+    gameplaySubsystem.onMiss().connect([&]() { hudSubsystem.increaseMisses(); });
 
     gameplaySubsystem.onSelect().connect([&](EntityID entityID) { soundSubsystem.play(entityID); });
 
@@ -100,6 +104,7 @@ int main(int argc, char** argv)
       window.clear();
 
       graphicsSubsystem.run();
+      hudSubsystem.run();
 
       window.display();
     }

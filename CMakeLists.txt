@@ -13,6 +13,7 @@ add_executable(
   src/Config.cpp
   src/GameplaySubsystem.cpp
   src/GraphicsSubsystem.cpp
+  src/HudSubsystem.cpp
   src/InputSubsystem.cpp
   src/MusicSubsystem.cpp
   src/SoundSubsystem.cpp

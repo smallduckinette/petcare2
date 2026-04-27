@@ -24,6 +24,8 @@ public:
   Signal<EntityID>& onDeselect();
   Signal<EntityID>& onShow();
   Signal<EntityID>& onHide();
+  Signal<>& onScore();
+  Signal<>& onMiss();
 
 private:
   void moveSelection(int movement);
@@ -40,4 +42,6 @@ private:
   Signal<EntityID> _deselect;
   Signal<EntityID> _show;
   Signal<EntityID> _hide;
+  Signal<> _score;
+  Signal<> _miss;
 };

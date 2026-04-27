@@ -31,11 +31,11 @@ void GameplaySubsystem::select()
   {
     if (*_currentAnimal == *_currentSelection)
     {
-      fmt::print("Bravo\n");
+      _score.fire();
     }
     else
     {
-      fmt::print("Booo\n");
+      _miss.fire();
     }
   }
   startGame();
@@ -89,4 +89,14 @@ Signal<EntityID>& GameplaySubsystem::onShow()
 Signal<EntityID>& GameplaySubsystem::onHide()
 {
   return _hide;
+}
+
+Signal<>& GameplaySubsystem::onScore()
+{
+  return _score;
+}
+
+Signal<>& GameplaySubsystem::onMiss()
+{
+  return _miss;
 }
