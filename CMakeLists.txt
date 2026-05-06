@@ -15,6 +15,7 @@ add_executable(
   src/GraphicsSubsystem.cpp
   src/HudSubsystem.cpp
   src/InputSubsystem.cpp
+  src/MainLoop.cpp
   src/MusicSubsystem.cpp
   src/SoundSubsystem.cpp
   src/Visual.cpp

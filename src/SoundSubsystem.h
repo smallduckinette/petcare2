@@ -9,7 +9,7 @@ class SoundSubsystem
 public:
   SoundSubsystem();
 
-  void load(config::Config& conf);
+  void load(const config::Config& conf);
 
   void play(EntityID entityID);
 

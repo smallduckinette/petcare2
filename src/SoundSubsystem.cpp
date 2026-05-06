@@ -6,7 +6,7 @@ SoundSubsystem::SoundSubsystem():
 {
 }
 
-void SoundSubsystem::load(config::Config& conf)
+void SoundSubsystem::load(const config::Config& conf)
 {
   for (const auto& sound : conf._sounds)
   {

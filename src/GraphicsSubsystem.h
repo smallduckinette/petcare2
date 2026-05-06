@@ -18,7 +18,7 @@ public:
   GraphicsSubsystem(sf::RenderWindow* window);
   ~GraphicsSubsystem();
 
-  void load(config::Config& conf);
+  void load(const config::Config& conf);
 
   void run() const;
 

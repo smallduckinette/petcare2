@@ -9,7 +9,7 @@ GameplaySubsystem::GameplaySubsystem():
 {
 }
 
-void GameplaySubsystem::load(config::Config& conf)
+void GameplaySubsystem::load(const config::Config& conf)
 {
   _buttons = conf._accessories | std::views::transform([](const auto& item) { return item._entityID;}) | std::ranges::to<std::vector>();
   _animals = conf._animals | std::views::transform([](const auto& item) { return item._entityID;}) | std::ranges::to<std::vector>();

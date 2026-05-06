@@ -14,6 +14,7 @@
 #include "GraphicsSubsystem.h"
 #include "HudSubsystem.h"
 #include "InputSubsystem.h"
+#include "MainLoop.h"
 #include "SoundSubsystem.h"
 #include "MusicSubsystem.h"
 
@@ -41,8 +42,6 @@ int main(int argc, char** argv)
   }
   else
   {
-    fmt::print("Starting Petcare\n");
-
     auto conf = config::makeConfig();
 
     sf::VideoMode chosenMode;
@@ -67,49 +66,22 @@ int main(int argc, char** argv)
     sf::RenderWindow window(chosenMode, "Petcare", mode);
     window.setVerticalSyncEnabled(true);
 
-    GraphicsSubsystem graphicsSubsystem(&window);
-    InputSubsystem inputSubsystem(&window);
-    GameplaySubsystem gameplaySubsystem;
+    // Common subsystems
     SoundSubsystem soundSubsystem;
     MusicSubsystem musicSubsystem;
-    HudSubsystem hudSubsystem(&window);
 
-    graphicsSubsystem.load(conf);
-    gameplaySubsystem.load(conf);
     soundSubsystem.load(conf);
     musicSubsystem.load(conf);
 
-    inputSubsystem.onQuit().connect([&]() { window.close(); });
-    inputSubsystem.onCancel().connect([&]() { window.close(); });
-    inputSubsystem.onLeft().connect([&]() { gameplaySubsystem.previous(); });
-    inputSubsystem.onRight().connect([&]() { gameplaySubsystem.next(); });
-    inputSubsystem.onAccept().connect([&]() { gameplaySubsystem.select(); });
-
-    gameplaySubsystem.onSelect().connect([&](EntityID entityID) { graphicsSubsystem.setStyle(entityID, selectedStyle); });
-    gameplaySubsystem.onDeselect().connect([&](EntityID entityID) { graphicsSubsystem.setStyle(entityID, normalStyle); });
-    gameplaySubsystem.onShow().connect([&](EntityID entityID) { graphicsSubsystem.setVisibility(entityID, true); });
-    gameplaySubsystem.onHide().connect([&](EntityID entityID) { graphicsSubsystem.setVisibility(entityID, false); });
-    gameplaySubsystem.onScore().connect([&]() { hudSubsystem.increaseScore(); });
-    gameplaySubsystem.onMiss().connect([&]() { hudSubsystem.increaseMisses(); });
-
-    gameplaySubsystem.onSelect().connect([&](EntityID entityID) { soundSubsystem.play(entityID); });
-
-    gameplaySubsystem.startGame();
+    MainLoop mainLoop(conf,
+                      &window,
+                      &soundSubsystem);
 
     while (window.isOpen())
     {
-      inputSubsystem.run();
       musicSubsystem.run();
-
-      window.clear();
-
-      graphicsSubsystem.run();
-      hudSubsystem.run();
-
-      window.display();
+      mainLoop.run();
     }
-
-    fmt::print("Closing\n");
   }
 
   return 0;

@@ -13,7 +13,7 @@ class GameplaySubsystem
 public:
   GameplaySubsystem();
 
-  void load(config::Config& conf);
+  void load(const config::Config& conf);
   void startGame();
 
   void next();

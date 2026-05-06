@@ -35,7 +35,7 @@ void GraphicsSubsystem::setVisibility(EntityID entity, bool visible)
   }
 }
 
-void GraphicsSubsystem::load(config::Config& conf)
+void GraphicsSubsystem::load(const config::Config& conf)
 {
   _textures = conf._textures | std::views::transform([](const auto& item) { auto [key, value] = item; auto texture = std::make_unique<sf::Texture>(); texture->loadFromFile(value); return std::make_pair(key, std::move(texture)); }) | std::ranges::to<std::map>();
 
