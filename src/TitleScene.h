@@ -8,11 +8,14 @@
 #include "Scene.h"
 #include "TitleSubsystem.h"
 
+class TextureCache;
+
 class TitleScene : public Scene
 {
 public:
   TitleScene(const config::Config& conf,
-             sf::RenderWindow* window);
+             sf::RenderWindow* window,
+             TextureCache* textureCache);
 
   void run() override;
 

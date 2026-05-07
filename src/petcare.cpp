@@ -13,6 +13,7 @@
 #include "MainLoop.h"
 #include "MusicSubsystem.h"
 #include "SoundSubsystem.h"
+#include "TextureCache.h"
 #include "TitleScene.h"
 
 namespace po = boost::program_options;
@@ -66,17 +67,19 @@ int main(int argc, char** argv)
     // Common subsystems
     SoundSubsystem soundSubsystem;
     MusicSubsystem musicSubsystem;
+    TextureCache textureCache;
 
     soundSubsystem.load(conf);
     musicSubsystem.load(conf);
+    textureCache.load(conf);
 
-
-    //
-    TitleScene titleScene(conf, &window);
+    // Scenes
+    TitleScene titleScene(conf, &window, &textureCache);
 
     MainLoop mainLoop(conf,
                       &window,
-                      &soundSubsystem);
+                      &soundSubsystem,
+                      &textureCache);
 
     Scene* currentScene = &titleScene;
 

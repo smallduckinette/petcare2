@@ -10,12 +10,15 @@
 #include "Scene.h"
 #include "SoundSubsystem.h"
 
+class TextureCache;
+
 class MainLoop : public Scene
 {
 public:
   MainLoop(const config::Config& conf,
            sf::RenderWindow* window,
-           SoundSubsystem* soundSubsystem);
+           SoundSubsystem* soundSubsystem,
+           TextureCache* textureCache);
 
   void run() override;
 

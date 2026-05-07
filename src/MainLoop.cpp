@@ -3,10 +3,11 @@
 
 MainLoop::MainLoop(const config::Config& conf,
                    sf::RenderWindow* window,
-                   SoundSubsystem* soundSubsystem):
+                   SoundSubsystem* soundSubsystem,
+                   TextureCache* textureCache):
   _window(window),
   _soundSubsystem(soundSubsystem),
-  _graphicsSubsystem(window),
+  _graphicsSubsystem(window, textureCache),
   _inputSubsystem(window),
   _hudSubsystem(window)
 {

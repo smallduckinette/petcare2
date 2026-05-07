@@ -2,10 +2,11 @@
 
 
 TitleScene::TitleScene(const config::Config& conf,
-                       sf::RenderWindow* window):
+                       sf::RenderWindow* window,
+                       TextureCache* textureCache):
   _window(window),
   _inputSubsystem(window),
-  _titleSubsystem(window)
+  _titleSubsystem(window, textureCache)
 {
   _titleSubsystem.load(conf);
 

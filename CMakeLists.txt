@@ -18,6 +18,7 @@ add_executable(
   src/MainLoop.cpp
   src/MusicSubsystem.cpp
   src/SoundSubsystem.cpp
+  src/TextureCache.cpp
   src/TitleScene.cpp
   src/TitleSubsystem.cpp
   src/Visual.cpp

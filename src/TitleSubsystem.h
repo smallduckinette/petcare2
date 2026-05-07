@@ -8,12 +8,13 @@
 #include "Constants.h"
 #include "Config.h"
 
+class TextureCache;
 class Visual;
 
 class TitleSubsystem
 {
 public:
-  TitleSubsystem(sf::RenderWindow* window);
+  TitleSubsystem(sf::RenderWindow* window, TextureCache* textureCache);
   ~TitleSubsystem();
 
   void load(const config::Config& conf);
@@ -21,11 +22,10 @@ public:
   void run() const;
 
 private:
-  sf::Texture* getTexture(TextureID textureID) const;
   Visual* makeVisual(const config::Entity& entity);
 
   sf::RenderWindow* _window;
+  TextureCache* _textureCache;
 
-  std::map<TextureID, std::unique_ptr<sf::Texture>> _textures;
   std::map<EntityID, std::unique_ptr<Visual>> _visuals;
 };

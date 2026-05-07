@@ -2,10 +2,12 @@
 
 #include <ranges>
 
+#include "TextureCache.h"
 #include "Visual.h"
 
-GraphicsSubsystem::GraphicsSubsystem(sf::RenderWindow* window):
-  _window(window)
+GraphicsSubsystem::GraphicsSubsystem(sf::RenderWindow* window, TextureCache* textureCache):
+  _window(window),
+  _textureCache(textureCache)
 {
 }
 
@@ -36,8 +38,6 @@ void GraphicsSubsystem::setVisibility(EntityID entity, bool visible)
 
 void GraphicsSubsystem::load(const config::Config& conf)
 {
-  _textures = conf._textures | std::views::transform([](const auto& item) { auto [key, value] = item; auto texture = std::make_unique<sf::Texture>(); texture->loadFromFile(value); return std::make_pair(key, std::move(texture)); }) | std::ranges::to<std::map>();
-
   // Accessories
   const size_t accessoryCount = conf._accessories.size();
   for (const auto& [index, entity] : std::views::enumerate(conf._accessories))
@@ -57,20 +57,7 @@ void GraphicsSubsystem::load(const config::Config& conf)
   }
 }
 
-sf::Texture* GraphicsSubsystem::getTexture(TextureID textureID) const
-{
-  auto it = _textures.find(textureID);
-  if (it == _textures.end())
-  {
-    throw std::runtime_error("Cannot find texture");
-  }
-  else
-  {
-    return it->second.get();
-  }
-}
-
 Visual* GraphicsSubsystem::makeVisual(const config::Entity& entity)
 {
-  return _visuals.emplace(entity._entityID, std::make_unique<Visual>(entity, [&](TextureID textureID) { return getTexture(textureID); })).first->second.get();
+  return _visuals.emplace(entity._entityID, std::make_unique<Visual>(entity, [&](TextureID textureID) { return _textureCache->getTexture(textureID); })).first->second.get();
 }
