@@ -13,8 +13,8 @@ MainLoop::MainLoop(const config::Config& conf,
   _graphicsSubsystem.load(conf);
   _gameplaySubsystem.load(conf);
 
-  _inputSubsystem.onQuit().connect([&]() { _window->close(); });
-  _inputSubsystem.onCancel().connect([&]() { _window->close(); });
+  _inputSubsystem.onQuit().connect([&]() { _quit.fire(); });
+  _inputSubsystem.onCancel().connect([&]() { _previous.fire(); });
   _inputSubsystem.onLeft().connect([&]() { _gameplaySubsystem.previous(); });
   _inputSubsystem.onRight().connect([&]() { _gameplaySubsystem.next(); });
   _inputSubsystem.onAccept().connect([&]() { _gameplaySubsystem.select(); });
@@ -41,4 +41,14 @@ void MainLoop::run()
   _hudSubsystem.run();
 
   _window->display();
+}
+
+Signal<>& MainLoop::onPrevious()
+{
+  return _previous;
+}
+
+Signal<>& MainLoop::onQuit()
+{
+  return _quit;
 }

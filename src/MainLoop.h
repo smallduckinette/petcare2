@@ -7,16 +7,20 @@
 #include "GraphicsSubsystem.h"
 #include "HudSubsystem.h"
 #include "InputSubsystem.h"
+#include "Scene.h"
 #include "SoundSubsystem.h"
 
-class MainLoop
+class MainLoop : public Scene
 {
 public:
   MainLoop(const config::Config& conf,
            sf::RenderWindow* window,
            SoundSubsystem* soundSubsystem);
 
-  void run();
+  void run() override;
+
+  Signal<>& onPrevious();
+  Signal<>& onQuit();
 
 private:
   sf::RenderWindow* _window;
@@ -26,4 +30,7 @@ private:
   InputSubsystem _inputSubsystem;
   GameplaySubsystem _gameplaySubsystem;
   HudSubsystem _hudSubsystem;
+
+  Signal<> _previous;
+  Signal<> _quit;
 };

@@ -10,13 +10,10 @@
 #include <SFML/Graphics.hpp>
 
 #include "Config.h"
-#include "GameplaySubsystem.h"
-#include "GraphicsSubsystem.h"
-#include "HudSubsystem.h"
-#include "InputSubsystem.h"
 #include "MainLoop.h"
-#include "SoundSubsystem.h"
 #include "MusicSubsystem.h"
+#include "SoundSubsystem.h"
+#include "TitleScene.h"
 
 namespace po = boost::program_options;
 
@@ -73,14 +70,26 @@ int main(int argc, char** argv)
     soundSubsystem.load(conf);
     musicSubsystem.load(conf);
 
+
+    //
+    TitleScene titleScene(conf, &window);
+
     MainLoop mainLoop(conf,
                       &window,
                       &soundSubsystem);
 
+    Scene* currentScene = &titleScene;
+
+    titleScene.onQuit().connect([&]() { window.close(); });
+    titleScene.onStart().connect([&]() { fmt::print("next\n"); currentScene = &mainLoop; });
+
+    mainLoop.onQuit().connect([&]() { window.close(); });
+    mainLoop.onPrevious().connect([&]() { window.close(); });
+
     while (window.isOpen())
     {
       musicSubsystem.run();
-      mainLoop.run();
+      currentScene->run();
     }
   }
 

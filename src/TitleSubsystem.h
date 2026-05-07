@@ -10,18 +10,15 @@
 
 class Visual;
 
-class GraphicsSubsystem
+class TitleSubsystem
 {
 public:
-  GraphicsSubsystem(sf::RenderWindow* window);
-  ~GraphicsSubsystem();
+  TitleSubsystem(sf::RenderWindow* window);
+  ~TitleSubsystem();
 
   void load(const config::Config& conf);
 
   void run() const;
-
-  void setStyle(EntityID entity, const StyleID& style);
-  void setVisibility(EntityID entity, bool visible);
 
 private:
   sf::Texture* getTexture(TextureID textureID) const;

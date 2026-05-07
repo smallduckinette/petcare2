@@ -46,6 +46,7 @@ namespace config
     std::vector<Entity> _accessories;
     std::vector<Sound> _sounds;
     std::vector<Music> _playlist;
+    Entity _title;
   };
 
   Config makeConfig();

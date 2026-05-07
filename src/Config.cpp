@@ -21,6 +21,8 @@ config::Config config::makeConfig()
   auto frameTexture = textureIdGenerator.generate();
   auto frameSelTexture = textureIdGenerator.generate();
 
+  auto titleTexture = textureIdGenerator.generate();
+
   auto birdStuffEntity = entityIdGenerator.generate();
   auto catStuffEntity = entityIdGenerator.generate();
   auto dogStuffEntity = entityIdGenerator.generate();
@@ -31,6 +33,8 @@ config::Config config::makeConfig()
   auto dogEntity = entityIdGenerator.generate();
   auto duckEntity = entityIdGenerator.generate();
   auto turtleEntity = entityIdGenerator.generate();
+
+  auto titleEntity = entityIdGenerator.generate();
 
   std::map<StyleID, TextureID> styles = {{normalStyle, frameTexture},
                                              {selectedStyle, frameSelTexture}};
@@ -46,6 +50,11 @@ config::Config config::makeConfig()
                              {selectedStyle, {Element{textureID, Animation(std::monostate())}, Element{frameSelTexture, Animation(0.2f)}}}}};
   };
 
+  auto makeTitle = [&]()
+  {
+    return Entity(titleEntity, {{normalStyle, {Element{titleTexture, Animation(std::monostate())}}}});
+  };
+
   return Config{{
       Texture{birdStuffTexture, "resources/bird_stuff.png"},
       Texture{catStuffTexture, "resources/cat_stuff.png"},
@@ -59,13 +68,14 @@ config::Config config::makeConfig()
       Texture{turtleTexture, "resources/turtle.png"},
       Texture{frameTexture, "resources/frame.png"},
       Texture{frameSelTexture, "resources/frame_sel.png"},
+      Texture{titleTexture, "resources/title.png"},
     },
                 {
-                  makeAccessory(birdEntity, birdTexture),
-                  makeAccessory(catEntity, catTexture),
-                  makeAccessory(dogEntity, dogTexture),
-                  makeAccessory(duckEntity, duckTexture),
-                  makeAccessory(turtleEntity, turtleTexture)
+                  makeAnimal(birdEntity, birdTexture),
+                  makeAnimal(catEntity, catTexture),
+                  makeAnimal(dogEntity, dogTexture),
+                  makeAnimal(duckEntity, duckTexture),
+                  makeAnimal(turtleEntity, turtleTexture)
                 },
                 {
                   makeAccessory(birdStuffEntity, birdStuffTexture),
@@ -86,6 +96,7 @@ config::Config config::makeConfig()
                   Music{"resources/bossa.mp3"},
                   Music{"resources/clavecin.mp3"},
                   Music{"resources/vibraphone.mp3"}
-                }
+                },
+                makeTitle()
   };
 }

@@ -1,7 +1,6 @@
 #include "GraphicsSubsystem.h"
 
 #include <ranges>
-#include <filesystem>
 
 #include "Visual.h"
 
